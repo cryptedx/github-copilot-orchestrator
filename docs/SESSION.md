@@ -17,7 +17,7 @@ Datum: 19. Oktober 2026
 4. **Zwei Modellfamilien zur Kreuzprüfung.** Umsetzer und Prüfer gehören jeweils zu verschiedenen Familien. Die Scouts bestätigen kritische Aussagen gegenseitig, und Luna hinterfragt als `challenger` die Pläne.
 5. **Luna bekommt mehr Arbeit.** Luna übernimmt den `runner` (Tests, Builds, Linter) sowie die Rollen `challenger` und `scout-luna`.
 6. **Modell-IDs statt Anzeigenamen** im Frontmatter, zum Beispiel `gpt-6-luna`.
-7. **Ultra-Modus als eigener Agent.** `orchestrator-ultra` überträgt die Muster des Ultracode-Modus der Claude App (gegnerische Prüfung, Judge Panel, Weitersuchen bis nichts mehr kommt, Completeness Critic) auf die vorhandenen Rollen. Er ist ein eigener Agent und kein Schalter, damit der normale Orchestrator günstig bleibt.
+7. **Ultra-Modus als eigener Agent.** `orchestrator-ultra` überträgt die Muster des Ultracode-Modus der Claude App (gegnerische Prüfung, Judge Panel, Weitersuchen bis nichts mehr kommt, Completeness Critic) auf die vorhandenen Rollen. Er ist ein eigener Agent und kein Schalter, damit der normale Orchestrator günstig bleibt. Die gegnerische Prüfung läuft standardmäßig mit `scout`, `scout-luna` und `challenger`. Ein Reviewer prüft nur Befunde, die eine Code-Änderung auslösen. Damit sinkt ein Ultra-Lauf geschätzt von $6–20 auf $4–10.
 
 ## Offene Punkte
 

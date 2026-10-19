@@ -32,7 +32,7 @@ Ein Set aus Custom Agents für GitHub Copilot (App und CLI), das bei der Arbeit 
 |---|---|
 | Breit erkunden (Multi-modal Sweep) | `scout` und `scout-luna` suchen parallel auf verschiedenen Wegen |
 | Weitersuchen bis nichts mehr kommt (Loop-until-dry) | neue Runden, bis zwei hintereinander nichts Neues bringen, höchstens 5 |
-| Gegnerisch prüfen (Adversarial Verify) | beide Scouts und der Reviewer der anderen Familie versuchen, jeden wichtigen Befund zu widerlegen; er gilt, wenn 2 von 3 scheitern |
+| Gegnerisch prüfen (Adversarial Verify) | beide Scouts und `challenger` versuchen, jeden wichtigen Befund zu widerlegen; er gilt, wenn 2 von 3 scheitern. Löst der Befund eine Code-Änderung aus, prüft statt `challenger` der Reviewer der anderen Familie |
 | Entwürfe gegeneinander (Judge Panel) | `implementer` und `implementer-sol` entwerfen, beide Reviewer bewerten, Opus entscheidet |
 | Umsetzen mit Prüfschleife | andere Familie prüft, `runner` testet, höchstens zwei Reparaturrunden |
 | Fragen, was fehlt (Completeness Critic) | `challenger` sucht am Ende jeder Phase nach Lücken |
@@ -40,6 +40,18 @@ Ein Set aus Custom Agents für GitHub Copilot (App und CLI), das bei der Arbeit 
 Anders als in der Claude App gibt es in Copilot keine Laufzeit, die so einen Ablauf als Skript ausführt. Den Ablauf steuert Opus selbst und führt dafür eine Befundliste. Zählen und Abbrechen sind deshalb weniger verlässlich als im Original.
 
 Der Ultra-Modus kostet ein Vielfaches des normalen Orchestrators. Für alltägliche Aufgaben bleibt `orchestrator` die bessere Wahl.
+
+### Kosten (Schätzung)
+
+Grob geschätzt nach den [Copilot-Preisen](https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing) vom Oktober 2026. Gemessen ist das nicht, den echten Verbrauch zeigt GitHub unter Settings → Billing.
+
+| Aufgabe | Kosten |
+|---|---:|
+| Kleine Aufgabe mit `orchestrator` | $0,50–1 |
+| Mittleres Feature mit `orchestrator` | $1,50–3 |
+| Großes Audit oder Migration mit `orchestrator-ultra` | $4–10 |
+
+Das meiste Geld geht an Opus und an die Aufträge für Sonnet und Sol. Haiku und Luna kosten pro Token ein Zwanzigstel davon. Am teuersten wird es, wenn der Cache verfällt: Lässt du eine Session länger liegen, kostet jede Opus-Runde danach den vollen Input-Preis. Haiku kostet außerdem ab 100.000 Tokens Kontext das Fünffache, deshalb gehen große Suchen an `scout-luna`.
 
 ## Installation
 
