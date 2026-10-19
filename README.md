@@ -47,11 +47,19 @@ Der Ultra-Modus kostet ein Vielfaches des normalen Orchestrators. Für alltägli
 
 Persönlich, also für alle Repos:
 
+macOS und Linux:
+
 ```bash
 ./install.sh
 ```
 
-Das Skript kopiert `agents/*.agent.md` nach `~/.copilot/agents/`. Alternativ legst du die Dateien für ein einzelnes Repo nach `.github/agents/`.
+Windows (PowerShell):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1
+```
+
+Beide Skripte kopieren `agents/*.agent.md` nach `~/.copilot/agents/`, unter Windows also nach `%USERPROFILE%\.copilot\agents\`. Weicht eine vorhandene Datei ab, legen sie vorher eine `.bak`-Sicherung an. Ein anderes Ziel setzt du mit der Umgebungsvariable `COPILOT_AGENTS_DIR`. Alternativ legst du die Dateien für ein einzelnes Repo nach `.github/agents/`.
 
 ### Skills (z. B. von Matt Pocock)
 
