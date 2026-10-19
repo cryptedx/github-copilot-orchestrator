@@ -17,6 +17,7 @@ Datum: 19. Oktober 2026
 4. **Zwei Modellfamilien zur Kreuzprüfung.** Umsetzer und Prüfer gehören jeweils zu verschiedenen Familien. Die Scouts bestätigen kritische Aussagen gegenseitig, und Luna hinterfragt als `challenger` die Pläne.
 5. **Luna bekommt mehr Arbeit.** Luna übernimmt den `runner` (Tests, Builds, Linter) sowie die Rollen `challenger` und `scout-luna`.
 6. **Modell-IDs statt Anzeigenamen** im Frontmatter, zum Beispiel `gpt-6-luna`.
+7. **Ultra-Modus als eigener Agent.** `orchestrator-ultra` überträgt die Muster des Ultracode-Modus der Claude App (gegnerische Prüfung, Judge Panel, Weitersuchen bis nichts mehr kommt, Completeness Critic) auf die vorhandenen Rollen. Er ist ein eigener Agent und kein Schalter, damit der normale Orchestrator günstig bleibt.
 
 ## Offene Punkte
 
@@ -24,3 +25,4 @@ Datum: 19. Oktober 2026
 - Ursprünglich stand hier „GPT-6.1 Astra“; gemeint war GPT-6.1 Sol. Die Agents heißen deshalb `implementer-sol` und `reviewer-sol`.
 - Nach den ersten Läufen sollte man in `~/.copilot/logs/` prüfen, ob die Subagenten wirklich mit ihrem eigenen Modell laufen.
 - Ob die Kreuzprüfung sich im Verhältnis zu ihren Kosten lohnt, zeigt sich erst im Alltag.
+- Beim Ultra-Modus ist offen, ob Opus die Befundliste und die Abbruchregeln ohne Skript-Laufzeit zuverlässig einhält.

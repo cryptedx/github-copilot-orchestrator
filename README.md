@@ -9,6 +9,7 @@ Ein Set aus Custom Agents für GitHub Copilot (App und CLI), das bei der Arbeit 
 | Rolle | Claude-Familie | GPT-Familie |
 |---|---|---|
 | Orchestrieren (teuer) | `orchestrator` – Opus 5.5 | – |
+| Orchestrieren, gründlich (sehr teuer) | `orchestrator-ultra` – Opus 5.5 | – |
 | Erkunden (billig) | `scout` – Haiku 5.5 | `scout-luna` – GPT-6 Luna |
 | Umsetzen (mittel) | `implementer` – Sonnet 5.5 | `implementer-sol` – GPT-6.1 Sol |
 | Code prüfen (mittel) | `reviewer` – Sonnet 5.5 | `reviewer-sol` – GPT-6.1 Sol |
@@ -22,6 +23,23 @@ Ein Set aus Custom Agents für GitHub Copilot (App und CLI), das bei der Arbeit 
 - **Scout-Paar:** Große Suchen teilen sich Haiku und Luna parallel. Kritische Aussagen bestätigt der Scout der jeweils anderen Familie unabhängig.
 - **Challenger:** Bevor Opus einen nicht-trivialen Plan umsetzen lässt, sucht Luna darin nach Schwachstellen.
 - **Verhältnismäßigkeit:** Doppelt geprüft wird nur dort, wo ein Fehler wirklich etwas kostet.
+
+### Ultra-Modus
+
+`orchestrator-ultra` überträgt die Arbeitsweise des Ultracode-Modus der Claude App auf dieses Agent-Set. Er ist für große Aufgaben gedacht, etwa Audits, Migrationen, schwere Bugs oder Entwürfe mit großem Lösungsraum.
+
+| Muster | Umsetzung |
+|---|---|
+| Breit erkunden (Multi-modal Sweep) | `scout` und `scout-luna` suchen parallel auf verschiedenen Wegen |
+| Weitersuchen bis nichts mehr kommt (Loop-until-dry) | neue Runden, bis zwei hintereinander nichts Neues bringen, höchstens 5 |
+| Gegnerisch prüfen (Adversarial Verify) | beide Scouts und der Reviewer der anderen Familie versuchen, jeden wichtigen Befund zu widerlegen; er gilt, wenn 2 von 3 scheitern |
+| Entwürfe gegeneinander (Judge Panel) | `implementer` und `implementer-sol` entwerfen, beide Reviewer bewerten, Opus entscheidet |
+| Umsetzen mit Prüfschleife | andere Familie prüft, `runner` testet, höchstens zwei Reparaturrunden |
+| Fragen, was fehlt (Completeness Critic) | `challenger` sucht am Ende jeder Phase nach Lücken |
+
+Anders als in der Claude App gibt es in Copilot keine Laufzeit, die so einen Ablauf als Skript ausführt. Den Ablauf steuert Opus selbst und führt dafür eine Befundliste. Zählen und Abbrechen sind deshalb weniger verlässlich als im Original.
+
+Der Ultra-Modus kostet ein Vielfaches des normalen Orchestrators. Für alltägliche Aufgaben bleibt `orchestrator` die bessere Wahl.
 
 ## Installation
 
@@ -56,7 +74,7 @@ Danach eine neue Session starten oder `/skills reload` ausführen. Mit `/skills 
 
 ## Benutzung
 
-1. In der Copilot App den Agenten **`orchestrator`** wählen und als Session-Modell **Opus 5.5** einstellen.
+1. In der Copilot App den Agenten **`orchestrator`** wählen (für große Aufgaben **`orchestrator-ultra`**) und als Session-Modell **Opus 5.5** einstellen.
 2. Den Skill wie gewohnt aufrufen, z. B. „Nutze /tdd für …“.
 
 Der Orchestrator folgt dem Ablauf des Skills und entscheidet pro Schritt nur, **wer** ihn ausführt. Subagenten erben keine Skills, deshalb gibt Opus ihnen die nötigen Regeln aus dem Skill im Auftrag mit.
