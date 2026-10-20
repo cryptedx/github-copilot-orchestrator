@@ -25,7 +25,7 @@ Alle Orchestratoren setzen Code nicht selbst um, sondern delegieren:
 - Tests, Builds, Linter und Commits gehen an `runner`. Die Commit-Nachricht gibt der Orchestrator vor.
 - Selbst arbeitet der Orchestrator nur bei trivialen Aufgaben, also bei Fragen ohne Code-Lesen oder bei wenigen Zeilen in einer einzigen Datei ohne Tests und ohne Commit.
 - Die Regel gilt auch im Autopilot und wenn der Orchestrator mitten in einer Session neu gewählt wird.
-- Subagenten laufen immer mit dem Modell aus ihrer Datei. Der Orchestrator gibt beim Start kein eigenes Modell vor.
+- Der Orchestrator gibt beim Start jedes Subagenten ausdrücklich dessen Modell-ID mit. Sonst laufen Scouts und Runner unter Umständen mit dem Session-Modell.
 
 ### Kreuzprüfung
 
@@ -140,7 +140,7 @@ Das Schema `claude-<familie>-<version>` ist durch ältere IDs wie `claude-sonnet
 ## Bekannte Stolperfallen
 
 - **Stilles Herabstufen:** Hat ein Subagent ein teureres Modell als die Session, stuft die Runtime ihn ohne sichtbare Warnung auf das Session-Modell herab. Der Hinweis steht nur im Log unter `~/.copilot/logs/`. Die Session sollte deshalb mit dem größten Modell laufen, das ein Subagent braucht. Bei `orchestrator` und `orchestrator-ultra` ist das Opus 5.5. Bei `orchestrator-lite` reicht Sonnet 5.5. Ist Sol teurer als Sonnet, wird `implementer-sol` dort herabgestuft. Das zeigt dann das Log.
-- **Modell-Override beim Delegieren:** Gibt der Orchestrator beim Start eines Subagenten selbst ein Modell vor, läuft der Subagent damit statt mit dem Modell aus seiner Datei. Im Log steht dann `explicitModelOverride`. Die Agents verbieten das inzwischen. Taucht es trotzdem auf, schärfst du die Regel nach.
+- **Subagent läuft mit dem Session-Modell:** In echten Sessions liefen `scout`, `challenger` und `implementer-sol` mit dem Modell des Orchestrators, weil dieser beim Delegieren sein eigenes Modell vorgab (im Log `explicitModelOverride`). Ein Verbot im Prompt half nicht. Deshalb geben die Orchestratoren seit v1.4.1 immer die richtige ID ausdrücklich mit, und die Runtime übernimmt sie. Prüfen kannst du das in `events.jsonl` der Session bei `subagent.started`.
 - **Kein Array im `model:`-Feld:** VS Code akzeptiert eine Liste von Modellen, die CLI und die App nicht.
 - **Kosten der Kreuzprüfung:** Jede Gegenprüfung verdoppelt die Kosten für diesen Schritt. Prüft der Orchestrator zu eifrig, schärfst du den Abschnitt „Verhältnismäßigkeit“ in `agents/orchestrator.agent.md` nach.
 

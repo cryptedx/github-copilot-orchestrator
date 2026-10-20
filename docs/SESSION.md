@@ -22,6 +22,8 @@ Datum: 19. Oktober 2026
 8. **Pflicht zur Delegation (20. Oktober 2026).** In einer echten Session hat der Orchestrator im Autopilot selbst editiert, getestet und committet (Issue #1). Seitdem gilt eine feste Regel: Änderungen gehen an einen Implementer, danach prüft ein Reviewer der anderen Familie. Tests, Builds und Commits gehen an `runner`. Selbst arbeitet der Orchestrator nur bei trivialen Aufgaben. Subagenten bekommen kein Modell-Override mehr.
 9. **`orchestrator-lite` auf Sonnet (20. Oktober 2026).** Der Opus-Orchestrator kostete in derselben Session fast so viel wie alle Subagenten zusammen (Issue #2). Für Alltagsaufgaben gibt es deshalb eine Variante auf Sonnet. Dazu kommen Regeln, die den eigenen Kontext des Orchestrators klein halten.
 
+10. **Modell-ID ausdrücklich mitgeben (20. Oktober 2026).** Auch mit `orchestrator-lite` lief `scout` auf Sonnet statt Haiku. Die Session kostete 112 AI Credits. Das Verbot eines Modell-Overrides hat nicht gegriffen. Ein ausdrückliches Modell übernimmt die Runtime aber. Seitdem steht die ID jeder Rolle in der Tabelle des Orchestrators, und er gibt sie bei jedem Start mit.
+
 ## Offene Punkte
 
 - Die abgeleiteten Modell-IDs (`claude-opus-5.5`, `claude-sonnet-5.5`, `claude-haiku-5.5`, `gpt-6.1-sol`) sind gegen die GitHub-Doku geprüft (alle Modelle gelistet, Claude-Schema durch ältere IDs belegt). Die exakten Strings sollte man nach dem ersten Lauf noch über `~/.copilot/settings.json` bestätigen.
