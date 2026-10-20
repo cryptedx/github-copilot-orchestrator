@@ -19,10 +19,14 @@ Datum: 19. Oktober 2026
 6. **Modell-IDs statt Anzeigenamen** im Frontmatter, zum Beispiel `gpt-6-luna`.
 7. **Ultra-Modus als eigener Agent.** `orchestrator-ultra` überträgt die Muster des Ultracode-Modus der Claude App (gegnerische Prüfung, Judge Panel, Weitersuchen bis nichts mehr kommt, Completeness Critic) auf die vorhandenen Rollen. Er ist ein eigener Agent und kein Schalter, damit der normale Orchestrator günstig bleibt. Die gegnerische Prüfung läuft standardmäßig mit `scout`, `scout-luna` und `challenger`. Ein Reviewer prüft nur Befunde, die eine Code-Änderung auslösen. Damit sinkt ein Ultra-Lauf geschätzt von $6–20 auf $4–10.
 
+8. **Pflicht zur Delegation (20. Oktober 2026).** In einer echten Session hat der Orchestrator im Autopilot selbst editiert, getestet und committet (Issue #1). Seitdem gilt eine feste Regel: Änderungen gehen an einen Implementer, danach prüft ein Reviewer der anderen Familie. Tests, Builds und Commits gehen an `runner`. Selbst arbeitet der Orchestrator nur bei trivialen Aufgaben. Subagenten bekommen kein Modell-Override mehr.
+9. **`orchestrator-lite` auf Sonnet (20. Oktober 2026).** Der Opus-Orchestrator kostete in derselben Session fast so viel wie alle Subagenten zusammen (Issue #2). Für Alltagsaufgaben gibt es deshalb eine Variante auf Sonnet. Dazu kommen Regeln, die den eigenen Kontext des Orchestrators klein halten.
+
 ## Offene Punkte
 
 - Die abgeleiteten Modell-IDs (`claude-opus-5.5`, `claude-sonnet-5.5`, `claude-haiku-5.5`, `gpt-6.1-sol`) sind gegen die GitHub-Doku geprüft (alle Modelle gelistet, Claude-Schema durch ältere IDs belegt). Die exakten Strings sollte man nach dem ersten Lauf noch über `~/.copilot/settings.json` bestätigen.
 - Ursprünglich stand hier „GPT-6.1 Astra“; gemeint war GPT-6.1 Sol. Die Agents heißen deshalb `implementer-sol` und `reviewer-sol`.
 - Nach den ersten Läufen sollte man in `~/.copilot/logs/` prüfen, ob die Subagenten wirklich mit ihrem eigenen Modell laufen.
 - Ob die Kreuzprüfung sich im Verhältnis zu ihren Kosten lohnt, zeigt sich erst im Alltag.
+- Ob `orchestrator-lite` Pläne zuverlässig genug macht, zeigt erst der Vergleich mit `orchestrator` im Alltag. Offen ist auch, ob Sol teurer als Sonnet ist. Dann würde `implementer-sol` in einer Sonnet-Session herabgestuft.
 - Beim Ultra-Modus ist offen, ob Opus die Befundliste und die Abbruchregeln ohne Skript-Laufzeit zuverlässig einhält.

@@ -9,12 +9,23 @@ Ein Set aus Custom Agents für GitHub Copilot (App und CLI), das bei der Arbeit 
 | Rolle | Claude-Familie | GPT-Familie |
 |---|---|---|
 | Orchestrieren (teuer) | `orchestrator` – Opus 5.5 | – |
+| Orchestrieren, günstig (mittel) | `orchestrator-lite` – Sonnet 5.5 | – |
 | Orchestrieren, gründlich (sehr teuer) | `orchestrator-ultra` – Opus 5.5 | – |
 | Erkunden (billig) | `scout` – Haiku 5.5 | `scout-luna` – GPT-6 Luna |
 | Umsetzen (mittel) | `implementer` – Sonnet 5.5 | `implementer-sol` – GPT-6.1 Sol |
 | Code prüfen (mittel) | `reviewer` – Sonnet 5.5 | `reviewer-sol` – GPT-6.1 Sol |
 | Tests/Builds ausführen (billigst) | – | `runner` – GPT-6 Luna |
 | Pläne hinterfragen (billigst) | – | `challenger` – GPT-6 Luna |
+
+### Pflicht zur Delegation
+
+Alle Orchestratoren setzen Code nicht selbst um, sondern delegieren:
+
+- Jede Datei- oder Code-Änderung geht an einen Implementer, und danach prüft ein Reviewer der anderen Familie.
+- Tests, Builds, Linter und Commits gehen an `runner`. Die Commit-Nachricht gibt der Orchestrator vor.
+- Selbst arbeitet der Orchestrator nur bei trivialen Aufgaben, also bei Fragen ohne Code-Lesen oder bei wenigen Zeilen in einer einzigen Datei ohne Tests und ohne Commit.
+- Die Regel gilt auch im Autopilot und wenn der Orchestrator mitten in einer Session neu gewählt wird.
+- Subagenten laufen immer mit dem Modell aus ihrer Datei. Der Orchestrator gibt beim Start kein eigenes Modell vor.
 
 ### Kreuzprüfung
 
@@ -52,6 +63,12 @@ Grob geschätzt nach den [Copilot-Preisen](https://docs.github.com/en/copilot/re
 | Großes Audit oder Migration mit `orchestrator-ultra` | $4–10 |
 
 Das meiste Geld geht an Opus und an die Aufträge für Sonnet und Sol. Haiku und Luna kosten pro Token ein Zwanzigstel davon. Am teuersten wird es, wenn der Cache verfällt: Lässt du eine Session länger liegen, kostet jede Opus-Runde danach den vollen Input-Preis. Haiku kostet außerdem ab 100.000 Tokens Kontext das Fünffache, deshalb gehen große Suchen an `scout-luna`.
+
+Jeder Aufruf des Orchestrators schickt seinen ganzen Kontext mit. Liest, editiert oder testet er selbst, wächst dieser Kontext schnell, und jede weitere Runde wird teurer. In einer gemessenen Session kostete der Opus-Orchestrator so rund 8 AIU pro Aufruf, ein Sonnet-Subagent rund 3 AIU. So hältst du die Kosten niedrig:
+
+- Für Alltagsaufgaben mit klarem Plan `orchestrator-lite` nehmen. Er plant mit Sonnet statt Opus und delegiert genauso.
+- Für jede unabhängige Aufgabe eine neue Session starten, statt eine lange Session immer wieder fortzusetzen.
+- Den Orchestrator nicht selbst arbeiten lassen. Siehe [Pflicht zur Delegation](#pflicht-zur-delegation).
 
 ## Installation
 
@@ -94,7 +111,10 @@ Danach eine neue Session starten oder `/skills reload` ausführen. Mit `/skills 
 
 ## Benutzung
 
-1. In der Copilot App den Agenten **`orchestrator`** wählen (für große Aufgaben **`orchestrator-ultra`**) und als Session-Modell **Opus 5.5** einstellen.
+1. In der Copilot App den Agenten wählen und das passende Session-Modell einstellen:
+   - **`orchestrator`** mit **Opus 5.5** für den Normalfall
+   - **`orchestrator-lite`** mit **Sonnet 5.5** für Alltagsaufgaben mit klarem Plan
+   - **`orchestrator-ultra`** mit **Opus 5.5** für große Aufgaben
 2. Den Skill wie gewohnt aufrufen, z. B. „Nutze /tdd für …“.
 
 Der Orchestrator folgt dem Ablauf des Skills und entscheidet pro Schritt nur, **wer** ihn ausführt. Subagenten erben keine Skills, deshalb gibt Opus ihnen die nötigen Regeln aus dem Skill im Auftrag mit.
@@ -119,7 +139,8 @@ Das Schema `claude-<familie>-<version>` ist durch ältere IDs wie `claude-sonnet
 
 ## Bekannte Stolperfallen
 
-- **Stilles Herabstufen:** Hat ein Subagent ein teureres Modell als die Session, stuft die Runtime ihn ohne sichtbare Warnung auf das Session-Modell herab. Der Hinweis steht nur im Log unter `~/.copilot/logs/`. Die Session sollte deshalb immer mit dem größten Modell laufen, hier Opus 5.5.
+- **Stilles Herabstufen:** Hat ein Subagent ein teureres Modell als die Session, stuft die Runtime ihn ohne sichtbare Warnung auf das Session-Modell herab. Der Hinweis steht nur im Log unter `~/.copilot/logs/`. Die Session sollte deshalb mit dem größten Modell laufen, das ein Subagent braucht. Bei `orchestrator` und `orchestrator-ultra` ist das Opus 5.5. Bei `orchestrator-lite` reicht Sonnet 5.5. Ist Sol teurer als Sonnet, wird `implementer-sol` dort herabgestuft. Das zeigt dann das Log.
+- **Modell-Override beim Delegieren:** Gibt der Orchestrator beim Start eines Subagenten selbst ein Modell vor, läuft der Subagent damit statt mit dem Modell aus seiner Datei. Im Log steht dann `explicitModelOverride`. Die Agents verbieten das inzwischen. Taucht es trotzdem auf, schärfst du die Regel nach.
 - **Kein Array im `model:`-Feld:** VS Code akzeptiert eine Liste von Modellen, die CLI und die App nicht.
 - **Kosten der Kreuzprüfung:** Jede Gegenprüfung verdoppelt die Kosten für diesen Schritt. Prüft der Orchestrator zu eifrig, schärfst du den Abschnitt „Verhältnismäßigkeit“ in `agents/orchestrator.agent.md` nach.
 
