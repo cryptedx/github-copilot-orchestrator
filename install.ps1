@@ -16,4 +16,4 @@ foreach ($f in Get-ChildItem -Path $Src -Filter '*.agent.md' -File) {
     Write-Host "Installiert: $($f.Name)"
 }
 
-Write-Host "Fertig. Neue Copilot-Session starten, dann den Agenten 'orchestrator' oder 'orchestrator-lite' wählen."
+Write-Host "Fertig. Neue Copilot-Session starten, dann einen Agenten wählen, z. B. 'orchestrator', 'orchestrator-lite' oder 'duo-luna'."

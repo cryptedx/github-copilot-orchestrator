@@ -11,9 +11,11 @@ Ein Set aus Custom Agents für GitHub Copilot (App und CLI), das bei der Arbeit 
 | Orchestrieren (teuer) | `orchestrator` – Opus 5.5 | – |
 | Orchestrieren, günstig (mittel) | `orchestrator-lite` – Sonnet 5.5 | – |
 | Orchestrieren, gründlich (sehr teuer) | `orchestrator-ultra` – Opus 5.5 | – |
+| Selbst umsetzen mit Prüfung (billigst) | `duo-haiku` – Haiku 5.5 | `duo-luna` – GPT-6 Luna |
 | Erkunden (billig) | `scout` – Haiku 5.5 | `scout-luna` – GPT-6 Luna |
 | Umsetzen (mittel) | `implementer` – Sonnet 5.5 | `implementer-sol` – GPT-6.1 Sol |
 | Code prüfen (mittel) | `reviewer` – Sonnet 5.5 | `reviewer-sol` – GPT-6.1 Sol |
+| Kleine Änderungen prüfen (billigst) | `reviewer-haiku` – Haiku 5.5 | `reviewer-luna` – GPT-6 Luna |
 | Tests/Builds ausführen (billigst) | – | `runner` – GPT-6 Luna |
 | Pläne hinterfragen (billigst) | – | `challenger` – GPT-6 Luna |
 
@@ -34,6 +36,16 @@ Alle Orchestratoren setzen Code nicht selbst um, sondern delegieren:
 - **Scout-Paar:** Große Suchen teilen sich Haiku und Luna parallel. Kritische Aussagen bestätigt der Scout der jeweils anderen Familie unabhängig.
 - **Challenger:** Bevor Opus einen nicht-trivialen Plan umsetzen lässt, sucht Luna darin nach Schwachstellen.
 - **Verhältnismäßigkeit:** Doppelt geprüft wird nur dort, wo ein Fehler wirklich etwas kostet.
+
+### Duo-Modus
+
+`duo-haiku` und `duo-luna` sind die billigste Stufe für kleine Aufgaben. Es gibt keinen Orchestrator: Das Session-Modell setzt selbst um und testet. Nach jeder Änderung prüft automatisch der Reviewer der anderen Familie.
+
+- Code von `duo-haiku` prüft `reviewer-luna`.
+- Code von `duo-luna` prüft `reviewer-haiku`.
+- Höchstens zwei Reparaturrunden, danach entscheidet der Nutzer. Ohne Prüfung bleiben nur Tippfehler, Kommentare und Formatierung.
+
+Für Aufgaben mit unklarer Ursache oder vielen Dateien ist `orchestrator-lite` die bessere Wahl. Bei großem Kontext lieber `duo-luna` nehmen, weil Haiku ab 100.000 Tokens das Fünffache kostet.
 
 ### Ultra-Modus
 
@@ -115,11 +127,12 @@ Danach eine neue Session starten oder `/skills reload` ausführen. Mit `/skills 
    - **`orchestrator`** mit **Opus 5.5** für den Normalfall
    - **`orchestrator-lite`** mit **Sonnet 5.5** für Alltagsaufgaben mit klarem Plan
    - **`orchestrator-ultra`** mit **Opus 5.5** für große Aufgaben
+   - **`duo-haiku`** mit **Haiku 5.5** oder **`duo-luna`** mit **GPT-6 Luna** für kleine Aufgaben
 2. Den Skill wie gewohnt aufrufen, z. B. „Nutze /tdd für …“.
 
 Der Orchestrator folgt dem Ablauf des Skills und entscheidet pro Schritt nur, **wer** ihn ausführt. Subagenten erben keine Skills, deshalb gibt Opus ihnen die nötigen Regeln aus dem Skill im Auftrag mit.
 
-Für kleine Aufgaben ist eine direkte Session mit Sonnet 5.5 ohne Orchestrator oft günstiger, weil auch die Delegation Tokens kostet.
+Für kleine Aufgaben ist ein Duo oder eine direkte Session mit Sonnet 5.5 ohne Orchestrator oft günstiger, weil auch die Delegation Tokens kostet.
 
 ## Modell-IDs
 
@@ -139,7 +152,7 @@ Das Schema `claude-<familie>-<version>` ist durch ältere IDs wie `claude-sonnet
 
 ## Bekannte Stolperfallen
 
-- **Stilles Herabstufen:** Hat ein Subagent ein teureres Modell als die Session, stuft die Runtime ihn ohne sichtbare Warnung auf das Session-Modell herab. Der Hinweis steht nur im Log unter `~/.copilot/logs/`. Die Session sollte deshalb mit dem größten Modell laufen, das ein Subagent braucht. Bei `orchestrator` und `orchestrator-ultra` ist das Opus 5.5. Bei `orchestrator-lite` reicht Sonnet 5.5. Ist Sol teurer als Sonnet, wird `implementer-sol` dort herabgestuft. Das zeigt dann das Log.
+- **Stilles Herabstufen:** Hat ein Subagent ein teureres Modell als die Session, stuft die Runtime ihn ohne sichtbare Warnung auf das Session-Modell herab. Der Hinweis steht nur im Log unter `~/.copilot/logs/`. Die Session sollte deshalb mit dem größten Modell laufen, das ein Subagent braucht. Bei `orchestrator` und `orchestrator-ultra` ist das Opus 5.5. Bei `orchestrator-lite` reicht Sonnet 5.5. In den Duos läuft der Reviewer mit dem Modell der anderen Familie. Ist es teurer als das Session-Modell, prüft am Ende dasselbe Modell, das umgesetzt hat. Das zeigt dann ebenfalls das Log. Ist Sol teurer als Sonnet, wird `implementer-sol` dort herabgestuft. Das zeigt dann das Log.
 - **Subagent läuft mit dem Session-Modell:** In echten Sessions liefen `scout`, `challenger` und `implementer-sol` mit dem Modell des Orchestrators, weil dieser beim Delegieren sein eigenes Modell vorgab (im Log `explicitModelOverride`). Ein Verbot im Prompt half nicht. Deshalb geben die Orchestratoren seit v1.4.1 immer die richtige ID ausdrücklich mit, und die Runtime übernimmt sie. Prüfen kannst du das in `events.jsonl` der Session bei `subagent.started`.
 - **Kein Array im `model:`-Feld:** VS Code akzeptiert eine Liste von Modellen, die CLI und die App nicht.
 - **Kosten der Kreuzprüfung:** Jede Gegenprüfung verdoppelt die Kosten für diesen Schritt. Prüft der Orchestrator zu eifrig, schärfst du den Abschnitt „Verhältnismäßigkeit“ in `agents/orchestrator.agent.md` nach.

@@ -16,4 +16,4 @@ for f in "$SRC"/*.agent.md; do
   echo "Installiert: $name"
 done
 
-echo "Fertig. Neue Copilot-Session starten, dann den Agenten 'orchestrator' oder 'orchestrator-lite' wählen."
+echo "Fertig. Neue Copilot-Session starten, dann einen Agenten wählen, z. B. 'orchestrator', 'orchestrator-lite' oder 'duo-luna'."

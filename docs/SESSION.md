@@ -23,6 +23,7 @@ Datum: 19. Oktober 2026
 9. **`orchestrator-lite` auf Sonnet (20. Oktober 2026).** Der Opus-Orchestrator kostete in derselben Session fast so viel wie alle Subagenten zusammen (Issue #2). Für Alltagsaufgaben gibt es deshalb eine Variante auf Sonnet. Dazu kommen Regeln, die den eigenen Kontext des Orchestrators klein halten.
 
 10. **Modell-ID ausdrücklich mitgeben (20. Oktober 2026).** Auch mit `orchestrator-lite` lief `scout` auf Sonnet statt Haiku. Die Session kostete 112 AI Credits. Das Verbot eines Modell-Overrides hat nicht gegriffen. Ein ausdrückliches Modell übernimmt die Runtime aber. Seitdem steht die ID jeder Rolle in der Tabelle des Orchestrators, und er gibt sie bei jedem Start mit.
+11. **Duo-Modus mit Haiku und Luna (21. Oktober 2026).** Für kleine Aufgaben ist selbst `orchestrator-lite` zu teuer. `duo-haiku` und `duo-luna` setzen deshalb selbst um. Jede Änderung prüft automatisch ein billiger Reviewer der anderen Familie: `reviewer-luna` für Haiku, `reviewer-haiku` für Luna. Die Kreuzprüfung bleibt so erhalten, ohne dass Opus oder Sonnet mitlaufen.
 
 ## Offene Punkte
 
