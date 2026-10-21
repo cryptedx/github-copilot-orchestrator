@@ -43,7 +43,8 @@ Alle Orchestratoren setzen Code nicht selbst um, sondern delegieren:
 
 - Code von `duo-haiku` prüft `reviewer-luna`.
 - Code von `duo-luna` prüft `reviewer-haiku`.
-- Höchstens zwei Reparaturrunden, danach entscheidet der Nutzer. Ohne Prüfung bleiben nur Tippfehler, Kommentare und Formatierung.
+- Höchstens zwei Reparaturrunden, danach entscheidet der Nutzer. Ohne Prüfung bleibt nur eine Antwort, die keine Datei ändert.
+- Die letzte Zeile jeder Antwort sagt, ob geprüft wurde, zum Beispiel `Prüfung: reviewer-luna – keine Befunde`. Fehlt sie, hat der Agent die Prüfung übersprungen.
 
 Für Aufgaben mit unklarer Ursache oder vielen Dateien ist `orchestrator-lite` die bessere Wahl. Bei großem Kontext lieber `duo-luna` nehmen, weil Haiku ab 100.000 Tokens das Fünffache kostet.
 

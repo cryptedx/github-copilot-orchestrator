@@ -24,6 +24,7 @@ Datum: 19. Oktober 2026
 
 10. **Modell-ID ausdrücklich mitgeben (20. Oktober 2026).** Auch mit `orchestrator-lite` lief `scout` auf Sonnet statt Haiku. Die Session kostete 112 AI Credits. Das Verbot eines Modell-Overrides hat nicht gegriffen. Ein ausdrückliches Modell übernimmt die Runtime aber. Seitdem steht die ID jeder Rolle in der Tabelle des Orchestrators, und er gibt sie bei jedem Start mit.
 11. **Duo-Modus mit Haiku und Luna (21. Oktober 2026).** Für kleine Aufgaben ist selbst `orchestrator-lite` zu teuer. `duo-haiku` und `duo-luna` setzen deshalb selbst um. Jede Änderung prüft automatisch ein billiger Reviewer der anderen Familie: `reviewer-luna` für Haiku, `reviewer-haiku` für Luna. Die Kreuzprüfung bleibt so erhalten, ohne dass Opus oder Sonnet mitlaufen.
+12. **Prüfpflicht im Duo verschärft (21. Oktober 2026).** In der ersten echten Session hat `duo-haiku` bei drei Prompts kein einziges Mal `reviewer-luna` aufgerufen. Werkzeuge fehlten nicht: Ohne `tools:`-Feld steht auch `agent` zur Verfügung. Der Prüfschritt stand aber erst in Schritt 3 des Ablaufs, und die Ausnahme für triviale Änderungen ließ Spielraum. Jetzt steht die Pflicht ganz oben, sie nennt das Werkzeug, gilt bei jeder geänderten Datei und endet mit einer festen Zeile `Prüfung: …`, an der man das Überspringen sieht.
 
 ## Offene Punkte
 
