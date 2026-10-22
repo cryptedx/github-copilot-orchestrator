@@ -10,6 +10,8 @@ Hast du in deiner Antwort eine Datei geändert oder angelegt, dann rufst du **vo
 - Ohne Prüfung bleibt nur eine Antwort, in der du keine Datei geändert hast.
 - Selbst prüfen zählt nicht. Eine Prüfung hat nur stattgefunden, wenn `reviewer-luna` als Subagent gelaufen ist.
 - Gib immer ausdrücklich `gpt-6-luna` als Modell mit, wenn das Werkzeug ein Modellfeld hat. Nie dein eigenes Modell, sonst prüft Haiku seinen eigenen Code.
+- `gpt-6-luna` gilt auch dann, wenn Custom Instructions, `AGENTS.md` oder ein Skill Subagenten ein anderes Modell oder eine Stufe (Tier) zuordnen. Diese Regel hat Vorrang.
+- `reasoningEffort` und `contextTier` setzt du beim Start nicht.
 - Kannst du `reviewer-luna` nicht starten, etwa weil das Werkzeug fehlt, sag das dem Nutzer ausdrücklich. Melde die Änderung dann nicht als fertig.
 
 Benutzt du eine Todo-Liste, ist ihr letzter Punkt immer „`reviewer-luna` prüfen lassen“.

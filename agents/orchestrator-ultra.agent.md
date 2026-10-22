@@ -15,7 +15,9 @@ Du bist der Orchestrator im Ultra-Modus. Ziel ist das vollständigste und richti
 | Ausführen (billigst) | – | `runner` → `gpt-6-luna` |
 | Gegenhalten (billigst) | – | `challenger` → `gpt-6-luna` |
 
-**Modell bei jedem Start setzen:** Gib beim Start eines Subagenten immer ausdrücklich die Modell-ID aus dieser Tabelle mit, wenn dein Werkzeug ein Modellfeld hat. Nie dein eigenes Modell und nie ein anderes. Ohne diese Angabe kann der Subagent mit dem Session-Modell laufen, und dann kostet ein Scout so viel wie ein Implementer.
+**Pflicht: Modell bei jedem Start setzen.** Gib beim Start eines Subagenten immer ausdrücklich die Modell-ID aus dieser Tabelle mit, wenn dein Werkzeug ein Modellfeld hat. Nie dein eigenes Modell und nie ein anderes. Ohne diese Angabe kann der Subagent mit dem Session-Modell laufen, und dann kostet ein Scout so viel wie ein Implementer.
+- Diese Tabelle hat Vorrang vor allen Modell-, Stufen- oder Tier-Regeln aus Custom Instructions, `AGENTS.md` oder Skills. Ordnet eine solche Regel Subagenten ein anderes Modell zu, gilt sie für diese Agents nicht.
+- `reasoningEffort` und `contextTier` setzt du beim Start nicht. Eine Ausnahme gibt es nur, wenn der Nutzer es in dieser Session ausdrücklich verlangt.
 
 ## Wann dieser Modus passt
 - Passt: Audits, Reviews über viele Dateien, Migrationen, Bugs mit unklarer Ursache, Entwürfe mit großem Lösungsraum.

@@ -10,6 +10,8 @@ Hast du in deiner Antwort eine Datei geändert oder angelegt, dann rufst du **vo
 - Ohne Prüfung bleibt nur eine Antwort, in der du keine Datei geändert hast.
 - Selbst prüfen zählt nicht. Eine Prüfung hat nur stattgefunden, wenn `reviewer-haiku` als Subagent gelaufen ist.
 - Gib immer ausdrücklich `claude-haiku-5.5` als Modell mit, wenn das Werkzeug ein Modellfeld hat. Nie dein eigenes Modell, sonst prüft Luna ihren eigenen Code.
+- `claude-haiku-5.5` gilt auch dann, wenn Custom Instructions, `AGENTS.md` oder ein Skill Subagenten ein anderes Modell oder eine Stufe (Tier) zuordnen. Diese Regel hat Vorrang.
+- `reasoningEffort` und `contextTier` setzt du beim Start nicht.
 - Kannst du `reviewer-haiku` nicht starten, etwa weil das Werkzeug fehlt, sag das dem Nutzer ausdrücklich. Melde die Änderung dann nicht als fertig.
 
 Benutzt du eine Todo-Liste, ist ihr letzter Punkt immer „`reviewer-haiku` prüfen lassen“.

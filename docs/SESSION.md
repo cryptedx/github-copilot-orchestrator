@@ -26,11 +26,14 @@ Datum: 19. Oktober 2026
 11. **Duo-Modus mit Haiku und Luna (21. Oktober 2026).** Für kleine Aufgaben ist selbst `orchestrator-lite` zu teuer. `duo-haiku` und `duo-luna` setzen deshalb selbst um. Jede Änderung prüft automatisch ein billiger Reviewer der anderen Familie: `reviewer-luna` für Haiku, `reviewer-haiku` für Luna. Die Kreuzprüfung bleibt so erhalten, ohne dass Opus oder Sonnet mitlaufen.
 12. **Prüfpflicht im Duo verschärft (21. Oktober 2026).** In der ersten echten Session hat `duo-haiku` bei drei Prompts kein einziges Mal `reviewer-luna` aufgerufen. Werkzeuge fehlten nicht: Ohne `tools:`-Feld steht auch `agent` zur Verfügung. Der Prüfschritt stand aber erst in Schritt 3 des Ablaufs, und die Ausnahme für triviale Änderungen ließ Spielraum. Jetzt steht die Pflicht ganz oben, sie nennt das Werkzeug, gilt bei jeder geänderten Datei und endet mit einer festen Zeile `Prüfung: …`, an der man das Überspringen sieht.
 
+13. **Vorrang der Modell-IDs und Prüfskript (22. Oktober 2026).** Eine Tier-Regel in den eigenen Custom Instructions ließ `reviewer-luna` auf Sonnet 5.5 mit Reasoning `max` laufen (Issue #4). Die Regel liegt nicht in diesem Repo. Die Agents, die Subagenten starten, beanspruchen jetzt Vorrang für ihre Modell-IDs und setzen `reasoningEffort` und `contextTier` nicht. `tools/check-session` zeigt nach jeder Session, ob ein Subagent mit einem anderen Modell lief.
+
 ## Offene Punkte
 
 - Die abgeleiteten Modell-IDs (`claude-opus-5.5`, `claude-sonnet-5.5`, `claude-haiku-5.5`, `gpt-6.1-sol`) sind gegen die GitHub-Doku geprüft (alle Modelle gelistet, Claude-Schema durch ältere IDs belegt). Die exakten Strings sollte man nach dem ersten Lauf noch über `~/.copilot/settings.json` bestätigen.
 - Ursprünglich stand hier „GPT-6.1 Astra“; gemeint war GPT-6.1 Sol. Die Agents heißen deshalb `implementer-sol` und `reviewer-sol`.
 - Nach den ersten Läufen sollte man in `~/.copilot/logs/` prüfen, ob die Subagenten wirklich mit ihrem eigenen Modell laufen.
+- Copilot kennt keine Rangfolge zwischen Agent-Prompt und Custom Instructions. Ob der beanspruchte Vorrang der Modell-IDs gegen eine Tier-Regel gewinnt, zeigt erst eine echte Session. Die Feldnamen in `subagent.started` sind aus Issue #4 übernommen und nicht an einem echten Log getestet.
 - Ob die Kreuzprüfung sich im Verhältnis zu ihren Kosten lohnt, zeigt sich erst im Alltag.
 - Ob `orchestrator-lite` Pläne zuverlässig genug macht, zeigt erst der Vergleich mit `orchestrator` im Alltag. Offen ist auch, ob Sol teurer als Sonnet ist. Dann würde `implementer-sol` in einer Sonnet-Session herabgestuft.
 - Beim Ultra-Modus ist offen, ob Opus die Befundliste und die Abbruchregeln ohne Skript-Laufzeit zuverlässig einhält.
